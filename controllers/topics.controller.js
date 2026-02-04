@@ -5,14 +5,9 @@ const {
 } = require("../services/topics.service");
 
 const getAllTopics = (request, response) => {
-  getAllTopicsService()
-    .then((topics) => {
-      response.status(200).send({ topics });
-    })
-    .catch((error) => {
-      // handle error
-      response.status(500).send({ error: error.message });
-    });
+  getAllTopicsService().then((topics) => {
+    response.status(200).send({ topics });
+  });
 };
 
 module.exports = { getAllTopics };
