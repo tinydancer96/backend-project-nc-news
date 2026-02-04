@@ -1,5 +1,6 @@
 const db = require("../connection");
 const format = require("pg-format");
+const lookUpObj = require("../utils.js");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
@@ -90,11 +91,8 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       return db.query(articleQuery);
     })
     .then(({ rows }) => {
-      const articleObj = {};
-
-      rows.forEach((article) => {
-        articleObj[article.title] = article.article_id;
-      });
+      const articles = rows;
+      const articleObj = lookUpObj(articles, "title", "article_id");
       const formattedComments = commentData.map((comment) => {
         return [
           articleObj[comment.article_title],
