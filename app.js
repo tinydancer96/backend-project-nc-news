@@ -18,7 +18,7 @@ app.use((request, response, next) => {
 });
 
 // ERROR TO CATCH ALL UNACCOUNTED ERRORS
-use.app((error, request, response, next) => {
+app.use((error, request, response, next) => {
   response.status(500).send({ msg: error });
 });
 
