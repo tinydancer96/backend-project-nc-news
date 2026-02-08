@@ -4,7 +4,7 @@ const {
 
 const getAllUsers = (request, response) => {
   getAllUsersService().then((users) => {
-    response.status(200).send(users);
+    response.status(200).send({ users });
   });
 };
 
