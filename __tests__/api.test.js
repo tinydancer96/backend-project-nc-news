@@ -72,4 +72,40 @@ describe("GET /api/articles/3", () => {
         expect(typeof article[0].comment_count).toBe("number");
       });
   });
+
+  test("GET: 200 - returns a single article", () => {
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.length).toBe(1);
+      });
+  });
+});
+
+describe("GET /api/articles/3", () => {
+  test("GET: 200 - returns article with correct columns", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(typeof comments[0].comment_id).toBe("number");
+        expect(typeof comments[0].votes).toBe("number");
+        expect(typeof comments[0].created_at).toBe("string");
+        expect(typeof comments[0].author).toBe("string");
+        expect(typeof comments[0].body).toBe("string");
+        expect(typeof comments[0].article_id).toBe("number");
+      });
+  });
+  test("GET: 200 - returns article of article_id 3", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments[0].article_id).toBe(3);
+      });
+  });
 });

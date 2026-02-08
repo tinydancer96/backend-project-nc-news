@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
-const topicsRouter = require("./routes/topics.router");
+const { router: topicsRouter } = require("./routes/topics.router");
 const { router: articlesRouter } = require("./routes/articles.router");
-const usersRouter = require("./routes/users.router");
+const { router: usersRouter } = require("./routes/users.router");
 const NotFoundError = require("./myErrorTypes/notFound");
 app.use(express.json());
 
