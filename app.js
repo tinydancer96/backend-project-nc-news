@@ -12,7 +12,7 @@ app.use("/api/users", usersRouter);
 
 app.use((request, response, next) => {
   const error = new NotFoundError("Route not found");
-  error.status = 404;
+  //   error.status = 404;
   next(error);
 });
 
