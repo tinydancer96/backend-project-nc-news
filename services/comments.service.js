@@ -18,6 +18,12 @@ exports.getCommentsByArticleId = (article_id) => {
         "Location: articles.services.js",
       );
     }
-    return fetchCommentsByArticleId(article_id);
+    return fetchCommentsByArticleId(article_id).then((comments) => {
+      if (comments.length === 0) {
+        return "There are no comments for this article";
+      } else {
+        return comments;
+      }
+    });
   });
 };
