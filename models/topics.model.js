@@ -5,3 +5,17 @@ exports.fetchAllTopics = () => {
     return topics.rows;
   });
 };
+
+exports.fetchTopicsBySlug = (slug) => {
+  return db
+    .query(
+      `
+      SELECT * FROM topics
+      WHERE topics.slug = $1
+    `,
+      [slug],
+    )
+    .then((topic) => {
+      return topic.rows;
+    });
+};

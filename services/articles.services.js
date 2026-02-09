@@ -4,16 +4,19 @@ const {
   updateArticleVotesById,
 } = require("../models/articles.model");
 
+const { fetchAllTopics } = require("../models/topics.model");
+
 const NotFoundError = require("../myErrorTypes/notFound");
 const InvalidInputError = require("../myErrorTypes/invalidInput");
 
 exports.getAllArticles = (query) => {
+  // Sort by column functionality
+
   // validate query input
-  const validColumns = {
+  const validSortedColumns = {
     author: "articles.author",
     title: "articles.title",
-    topic: "articles.topic",
-    created_at: "articles.created_at",
+    topics: "articles.topics",
   };
   const order = ["asc", "desc"];
 
@@ -23,8 +26,16 @@ exports.getAllArticles = (query) => {
 
   if (Object.keys(query).length !== 0) {
     const [[key, value]] = Object.entries(query);
-    if (Object.keys(validColumns).includes(key) && order.includes(value)) {
-      orderByColumn = validColumns[key];
+    // Filter by topics functionality
+    if (key === topics) {
+      // validate topic exists
+      console.log("*");
+    }
+    if (
+      Object.keys(validSortedColumns).includes(key) &&
+      order.includes(value)
+    ) {
+      orderByColumn = validSortedColumns[key];
       sortBy = value;
     } else {
       throw new InvalidInputError(
@@ -33,6 +44,7 @@ exports.getAllArticles = (query) => {
       );
     }
   }
+
   return fetchAllArticles(orderByColumn, sortBy.toUpperCase());
 };
 

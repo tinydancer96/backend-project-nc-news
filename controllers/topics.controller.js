@@ -2,9 +2,10 @@
 // const app = express();
 const {
   getAllTopics: getAllTopicsService,
+  getTopicBySlug: getTopicBySlugService,
 } = require("../services/topics.service");
 
-const getAllTopics = (request, response, next) => {
+exports.getAllTopics = (request, response, next) => {
   getAllTopicsService()
     .then((topics) => {
       response.status(200).send({ topics });
@@ -14,4 +15,13 @@ const getAllTopics = (request, response, next) => {
     });
 };
 
-module.exports = { getAllTopics };
+exports.getTopicBySlug = (request, response, next) => {
+  const { slug } = request.params;
+  getTopicBySlugService(slug)
+    .then((topic) => {
+      response.status(200).send({ topic });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};

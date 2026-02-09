@@ -20,6 +20,28 @@ describe("GET /api/topics/", () => {
   });
 });
 
+describe("GET /api/topics/:slug", () => {
+  test("GET: 200 - returns valid", () => {
+    return request(app)
+      .get("/api/topics/mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { topic } = body;
+        expect(topic[0].slug).toBe("mitch");
+        expect(typeof topic[0].description).toBe("string");
+      });
+  });
+
+  test("GET: 200 - errors when invalid topic", () => {
+    return request(app)
+      .get("/api/topics/iaeilfar*()(75")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic not found");
+      });
+  });
+});
+
 describe("GET /api/users/", () => {
   test("GET: 200 - returns users with correct columns", () => {
     return request(app)
