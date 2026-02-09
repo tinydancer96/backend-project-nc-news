@@ -13,13 +13,14 @@ app.use("/api/articles", articlesRouter);
 app.use("/api/users", usersRouter);
 
 app.use((request, response, next) => {
-  const error = new NotFoundError("Route not found");
+  const error = new NotFoundError("Route not found", "Location: app.js");
   next(error);
 });
 
 // ERROR HANDLING FOR IF ROUTE DOES NOT EXISTS
 app.use((error, request, response, next) => {
   if (error instanceof NotFoundError) {
+    console.log(error.location);
     response.status(error.status).send({ msg: error.message });
   } else {
     next(error);
