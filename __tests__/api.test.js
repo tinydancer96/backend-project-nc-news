@@ -226,6 +226,15 @@ describe("DELETE /api/comments/:comment_id", () => {
     return request(app).delete("/api/comments/1").expect(204);
   });
 
+  test("Confirms deletion of comment 1", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment does not exist. Cannot delete");
+      });
+  });
+
   test("DELETE 404: does not delete non-existing comment", () => {
     return request(app)
       .delete("/api/comments/9000")
