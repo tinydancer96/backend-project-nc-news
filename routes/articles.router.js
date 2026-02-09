@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
+
+// Articles
 const {
   getAllArticles,
   getArticleById,
   patchVoteByArticleId,
 } = require("../controllers/articles.controller");
+
+// Comments
 const {
   getCommentsByArticleId,
   postCommentbyArticleId,

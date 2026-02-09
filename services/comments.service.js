@@ -1,12 +1,18 @@
 const {
+  fetchCommentById,
   fetchCommentsByArticleIdPost,
   fetchCommentsByArticleId,
+  fetchCommentsByArticleIdDelete,
 } = require("../models/comments.model");
 
 const { fetchUserById } = require("../models/users.model");
 const { fetchArticleById } = require("../models/articles.model");
 const InvalidInputError = require("../myErrorTypes/invalidInput");
 const NotFoundError = require("../myErrorTypes/notFound");
+
+exports.getCommentsByCommentId = async (comment_id) => {
+  return fetchCommentById(comment_id);
+};
 
 exports.getCommentsByArticleId = async (article_id) => {
   if (isNaN(Number(article_id))) {
@@ -52,4 +58,23 @@ exports.postCommentbyArticleId = async (article_id, author, body) => {
   }
 
   return fetchCommentsByArticleIdPost(article_id, author, body);
+};
+
+exports.deleteCommentByArticleId = async (comment_id) => {
+  if (isNaN(Number(comment_id))) {
+    throw new InvalidInputError(
+      "Invalid comment_id. Please provide a number",
+      "Location: comments.service.js",
+    );
+  }
+
+  const comment = await fetchCommentById(comment_id);
+  if (comment.length === 0) {
+    throw new NotFoundError(
+      "Comment does not exist. Cannot delete",
+      "Location: comments.service.js",
+    );
+  }
+
+  return fetchCommentsByArticleIdDelete(comment_id);
 };

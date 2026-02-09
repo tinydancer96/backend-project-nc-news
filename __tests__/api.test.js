@@ -113,7 +113,7 @@ const validNewComment = {
 };
 
 describe("POST comment for an article", () => {
-  test("responds with a single object for valid comment", () => {
+  test("POST 201: responds with a single object for valid comment", () => {
     return request(app)
       .post("/api/articles/7/comments")
       .send(validNewComment)
@@ -127,7 +127,7 @@ describe("POST comment for an article", () => {
       });
   });
 
-  test("nonexistent user should return 404", () => {
+  test("POST 404: nonexistent user should ", () => {
     return request(app)
       .post("/api/articles/7/comments")
       .send({ author: "nonexistent_user", body: "test" })
@@ -137,7 +137,7 @@ describe("POST comment for an article", () => {
       });
   });
 
-  test("nonexistent article should return 404", () => {
+  test("POST 404: nonexistent article should", () => {
     return request(app)
       .post("/api/articles/999/comments")
       .send(validNewComment)
@@ -148,10 +148,8 @@ describe("POST comment for an article", () => {
   });
 });
 
-////
-
 describe("PATCH /api/articles/:article_id", () => {
-  test("200 - increments the votes by the given amount", () => {
+  test("PATCH 200: increments the votes by the given amount", () => {
     const voteUpdate = { inc_votes: 5 };
     return request(app)
       .patch("/api/articles/1")
@@ -166,7 +164,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-  test("200 - decrements the votes by the given amount", () => {
+  test("PATCH 200 decrements the votes by the given amount", () => {
     const voteUpdate = { inc_votes: -10 };
     return request(app)
       .patch("/api/articles/1")
@@ -179,7 +177,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-  test("400 - returns error for invalid inc_votes type", () => {
+  test("PATCH 400: returns error for invalid inc_votes type", () => {
     const invalidVote = { inc_votes: "five" };
     return request(app)
       .patch("/api/articles/1")
@@ -190,7 +188,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-  test("400 - returns error for missing inc_votes", () => {
+  test("PATCH 400: returns error for missing inc_votes", () => {
     return request(app)
       .patch("/api/articles/1")
       .send({})
@@ -200,7 +198,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-  test("404 - returns error for nonexistent article", () => {
+  test("PATCH 404: returns error for nonexistent article", () => {
     const voteUpdate = { inc_votes: 1 };
     return request(app)
       .patch("/api/articles/9999")
@@ -219,6 +217,30 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Please provide valid article_id");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("DELETE 204: deletes existing comment", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+
+  test("DELETE 404: does not delete non-existing comment", () => {
+    return request(app)
+      .delete("/api/comments/9000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment does not exist. Cannot delete");
+      });
+  });
+
+  test("DELETE 404: does not delete when non-number comment_id provided", () => {
+    return request(app)
+      .delete("/api/comments/hello")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid comment_id. Please provide a number");
       });
   });
 });

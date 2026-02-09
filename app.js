@@ -3,6 +3,7 @@ const app = express();
 const { router: topicsRouter } = require("./routes/topics.router");
 const { router: articlesRouter } = require("./routes/articles.router");
 const { router: usersRouter } = require("./routes/users.router");
+const { router: commentsRouter } = require("./routes/comments.router");
 const NotFoundError = require("./myErrorTypes/notFound");
 const InvalidInputError = require("./myErrorTypes/invalidInput");
 
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use("/api/topics", topicsRouter);
 app.use("/api/articles", articlesRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/comments", commentsRouter);
 
 app.use((request, response, next) => {
   const error = new NotFoundError("Route not found", "Location: app.js");

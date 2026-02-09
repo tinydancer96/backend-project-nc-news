@@ -1,5 +1,19 @@
 const db = require("../db/connection");
 
+exports.fetchCommentById = (comment_id) => {
+  return db
+    .query(
+      `
+    SELECT * FROM comments
+    WHERE comment_id = $1;
+    `,
+      [comment_id],
+    )
+    .then((comment) => {
+      return comment.rows;
+    });
+};
+
 exports.fetchCommentsByArticleId = (article_id) => {
   return db
     .query(
@@ -28,4 +42,14 @@ exports.fetchCommentsByArticleIdPost = (article_id, author, body) => {
     .then((comments) => {
       return comments.rows[0];
     });
+};
+
+exports.fetchCommentsByArticleIdDelete = (comment_id) => {
+  return db.query(
+    `
+    DELETE FROM comments
+    WHERE comment_id = $1;
+    `,
+    [comment_id],
+  );
 };
