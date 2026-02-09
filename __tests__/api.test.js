@@ -84,7 +84,7 @@ describe("GET /api/articles/3", () => {
   });
 });
 
-describe("GET /api/articles/3", () => {
+describe("GET /api/articles/3/comments", () => {
   test("GET: 200 - returns article with correct columns", () => {
     return request(app)
       .get("/api/articles/3/comments")
@@ -106,6 +106,50 @@ describe("GET /api/articles/3", () => {
       .then(({ body }) => {
         const { comments } = body;
         expect(comments[0].article_id).toBe(3);
+      });
+  });
+});
+const validNewComment = {
+  author: "butter_bridge",
+  body: "new comment for article 7",
+};
+
+const invalidNewComment = {
+  author: "tinydancer96", // missing body
+};
+
+describe("POST comment for an article", () => {
+  test("responds with a single object for valid comment", () => {
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send(validNewComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(typeof comment).toBe("object");
+        expect(comment.body).toBe(validNewComment.body);
+        expect(comment.author).toBe(validNewComment.author);
+        expect(comment.article_id).toBe(7);
+      });
+  });
+
+  test("nonexistent user should return 404", () => {
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send({ author: "nonexistent_user", body: "test" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This user does not exist");
+      });
+  });
+
+  test("nonexistent article should return 404", () => {
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(validNewComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This article id does not exist");
       });
   });
 });
