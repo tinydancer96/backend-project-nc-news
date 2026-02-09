@@ -5,10 +5,15 @@ const {
   patchVoteByArticleId: patchVoteByArticleIdService,
 } = require("../services/articles.services");
 
-exports.getAllArticles = (request, response) => {
-  getAllArticlesService().then((articles) => {
-    response.status(200).send({ articles });
-  });
+exports.getAllArticles = (request, response, next) => {
+  const query = request.query;
+  getAllArticlesService(query)
+    .then((articles) => {
+      response.status(200).send({ articles });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
 exports.getArticleById = (request, response, next) => {

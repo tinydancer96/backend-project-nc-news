@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = (orderByColumn, sortBy) => {
   return db
     .query(
       `
@@ -16,7 +16,7 @@ exports.fetchAllArticles = () => {
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;
+    ORDER BY ${orderByColumn} ${sortBy};
         `,
     )
     .then((articles) => {
