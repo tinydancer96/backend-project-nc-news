@@ -27,7 +27,6 @@ describe("GET /api/users/", () => {
       .expect(200)
       .then(({ body }) => {
         const { users } = body;
-        // console.log(typeof users[0]);
         expect(typeof users[0].username).toBe("string");
         expect(typeof users[0].name).toBe("string");
         expect(typeof users[0].avatar_url).toBe("string");
@@ -42,7 +41,6 @@ describe("GET /api/articles/", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        // console.log(typeof articles[0].topic);
         expect(typeof articles[0].author).toBe("string");
         expect(typeof articles[0].title).toBe("string");
         expect(typeof articles[0].article_id).toBe("number");
@@ -114,10 +112,6 @@ const validNewComment = {
   body: "new comment for article 7",
 };
 
-const invalidNewComment = {
-  author: "tinydancer96", // missing body
-};
-
 describe("POST comment for an article", () => {
   test("responds with a single object for valid comment", () => {
     return request(app)
@@ -150,6 +144,81 @@ describe("POST comment for an article", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("This article id does not exist");
+      });
+  });
+});
+
+////
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200 - increments the votes by the given amount", () => {
+    const voteUpdate = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.article_id).toBe(1);
+        expect(typeof article.votes).toBe("number");
+        // Assuming seed has 100 votes initially
+        expect(article.votes).toBeGreaterThanOrEqual(5);
+      });
+  });
+
+  test("200 - decrements the votes by the given amount", () => {
+    const voteUpdate = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.article_id).toBe(1);
+        expect(typeof article.votes).toBe("number");
+      });
+  });
+
+  test("400 - returns error for invalid inc_votes type", () => {
+    const invalidVote = { inc_votes: "five" };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(invalidVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("inc_votes must be a number");
+      });
+  });
+
+  test("400 - returns error for missing inc_votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("inc_votes must be a number");
+      });
+  });
+
+  test("404 - returns error for nonexistent article", () => {
+    const voteUpdate = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/9999")
+      .send(voteUpdate)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This article id does not exist");
+      });
+  });
+
+  test("400 - returns error for invalid article_id format", () => {
+    const voteUpdate = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/not-a-number")
+      .send(voteUpdate)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Please provide valid article_id");
       });
   });
 });
