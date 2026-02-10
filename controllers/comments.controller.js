@@ -45,7 +45,7 @@ exports.postCommentbyArticleId = async (request, response, next) => {
       author,
       body,
     );
-    response.status(201).send({ comment });
+    return response.status(201).send({ comment });
   } catch (error) {
     next(error);
   }
@@ -55,7 +55,7 @@ exports.deleteCommentByArticleId = async (request, response, next) => {
   const { comment_id } = request.params;
   try {
     const deleteComment = await deleteCommentByArticleIdService(comment_id);
-    response.status(204).send();
+    return response.status(204).send();
   } catch (error) {
     next(error);
   }

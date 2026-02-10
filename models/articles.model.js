@@ -1,5 +1,4 @@
 const db = require("../db/connection");
-const { sort } = require("../db/data/test-data/articles");
 
 exports.fetchAllArticles = async (orderByColumn, sortBy, topicSearch) => {
   let queryStr = `
