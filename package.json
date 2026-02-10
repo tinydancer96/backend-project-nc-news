@@ -5,13 +5,14 @@
   "main": "listen.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup-dbs.sql",
-    "seed-dev": "node ./db/seeds/run-seed.js",
+    "seed": "node ./db/seeds/run-seed.js",
     "test": "jest --runInBand",
     "prepare": "husky install",
     "start": "node listen.js",
     "test-seed": "jest seed.test.js",
     "test-seed-query": "NODE_ENV=test node /Users/mardgelleneri/NorthCoders/backend/backend_project/nc-news-BE/db/queries",
-    "dev": "nodemon listen.js"
+    "dev": "nodemon listen.js",
+    "seed-prod": "NODE_ENV=production npm run seed"
   },
   "repository": {
     "type": "git",
@@ -30,12 +31,12 @@
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
     "nodemon": "^3.1.11",
-    "pg": "^8.18.0",
     "pg-format": "^1.0.4",
     "supertest": "^7.2.2"
   },
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.6.1",
+    "pg": "^8.18.0"
   },
   "jest": {
     "setupFilesAfterEnv": [

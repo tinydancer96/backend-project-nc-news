@@ -15,59 +15,61 @@ exports.getAllArticles = async (query) => {
   let sortBy = "desc";
   let topicSearch = "";
 
-  const [[key, value]] = Object.entries(query);
-  // Filter by topic functionality
-
-  // checks if query is topics query?
-  if (key === "topic") {
-    fetchTopicsBySlug(value).then((topics) => {
-      if (topics.length === 0) {
-        throw new NotFoundError(
-          "Topic not found",
-          "Location: articles.service.js",
-        );
-      } else {
-        topicSearch = value;
-      }
-    });
-  }
-
-  // Sort by functionality
-
-  // validate query input for sort by functionality
-  const validSortedColumns = {
-    author: "articles.author",
-    title: "articles.title",
-    topic: "article.topic",
-  };
-  const order = ["asc", "desc"];
-
   if (Object.keys(query).length !== 0) {
-    // checks if query is a topic query
+    const [[key, value]] = Object.entries(query);
+    // Filter by topic functionality
+
+    // checks if query is topics query?
     if (key === "topic") {
-      const topic = await fetchTopicsBySlug(value);
-      if (topic.length === 0) {
-        throw new NotFoundError(
-          "Topic not found",
+      fetchTopicsBySlug(value).then((topics) => {
+        if (topics.length === 0) {
+          throw new NotFoundError(
+            "Topic not found",
+            "Location: articles.service.js",
+          );
+        } else {
+          topicSearch = value;
+        }
+      });
+    }
+
+    // Sort by functionality
+
+    // validate query input for sort by functionality
+    const validSortedColumns = {
+      author: "articles.author",
+      title: "articles.title",
+      topic: "article.topic",
+    };
+    const order = ["asc", "desc"];
+
+    if (Object.keys(query).length !== 0) {
+      // checks if query is a topic query
+      if (key === "topic") {
+        const topic = await fetchTopicsBySlug(value);
+        if (topic.length === 0) {
+          throw new NotFoundError(
+            "Topic not found",
+            "Location: articles.service.js",
+          );
+        } else {
+          topicSearch = value;
+        }
+
+        // checks if it is an author or title query
+      } else if (
+        Object.keys(validSortedColumns).includes(key) &&
+        order.includes(value)
+      ) {
+        orderByColumn = validSortedColumns[key];
+        sortBy = value.toUpperCase();
+        // if not title, author or topic throw an error
+      } else {
+        throw new InvalidInputError(
+          "Invalid sort by column or order. Please sort by author, title or topic and order by asc or desc",
           "Location: articles.service.js",
         );
-      } else {
-        topicSearch = value;
       }
-
-      // checks if it is an author or title query
-    } else if (
-      Object.keys(validSortedColumns).includes(key) &&
-      order.includes(value)
-    ) {
-      orderByColumn = validSortedColumns[key];
-      sortBy = value.toUpperCase();
-      // if not title, author or topic throw an error
-    } else {
-      throw new InvalidInputError(
-        "Invalid sort by column or order. Please sort by author, title or topic and order by asc or desc",
-        "Location: articles.service.js",
-      );
     }
   }
 
