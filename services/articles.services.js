@@ -4,39 +4,65 @@ const {
   updateArticleVotesById,
 } = require("../models/articles.model");
 
-const { fetchAllTopics } = require("../models/topics.model");
+const { fetchTopicsBySlug } = require("../models/topics.model");
 
 const NotFoundError = require("../myErrorTypes/notFound");
 const InvalidInputError = require("../myErrorTypes/invalidInput");
 
-exports.getAllArticles = (query) => {
-  // Sort by column functionality
-
-  // validate query input
-  const validSortedColumns = {
-    author: "articles.author",
-    title: "articles.title",
-    topics: "articles.topics",
-  };
-  const order = ["asc", "desc"];
-
+exports.getAllArticles = async (query) => {
   // sets default values
   let orderByColumn = "articles.created_at";
   let sortBy = "desc";
+  let topicSearch = "";
+
+  const [[key, value]] = Object.entries(query);
+  // Filter by topic functionality
+
+  // checks if query is topics query?
+  if (key === "topic") {
+    fetchTopicsBySlug(value).then((topics) => {
+      if (topics.length === 0) {
+        throw new NotFoundError(
+          "Topic not found",
+          "Location: articles.service.js",
+        );
+      } else {
+        topicSearch = value;
+      }
+    });
+  }
+
+  // Sort by functionality
+
+  // validate query input for sort by functionality
+  const validSortedColumns = {
+    author: "articles.author",
+    title: "articles.title",
+    topic: "article.topic",
+  };
+  const order = ["asc", "desc"];
 
   if (Object.keys(query).length !== 0) {
-    const [[key, value]] = Object.entries(query);
-    // Filter by topics functionality
-    if (key === topics) {
-      // validate topic exists
-      console.log("*");
-    }
-    if (
+    // checks if query is a topic query
+    if (key === "topic") {
+      const topic = await fetchTopicsBySlug(value);
+      if (topic.length === 0) {
+        throw new NotFoundError(
+          "Topic not found",
+          "Location: articles.service.js",
+        );
+      } else {
+        topicSearch = value;
+      }
+
+      // checks if it is an author or title query
+    } else if (
       Object.keys(validSortedColumns).includes(key) &&
       order.includes(value)
     ) {
       orderByColumn = validSortedColumns[key];
-      sortBy = value;
+      sortBy = value.toUpperCase();
+      // if not title, author or topic throw an error
     } else {
       throw new InvalidInputError(
         "Invalid sort by column or order. Please sort by author, title or topic and order by asc or desc",
@@ -45,7 +71,7 @@ exports.getAllArticles = (query) => {
     }
   }
 
-  return fetchAllArticles(orderByColumn, sortBy.toUpperCase());
+  return fetchAllArticles(orderByColumn, sortBy, topicSearch);
 };
 
 exports.getArticleById = (article_id) => {

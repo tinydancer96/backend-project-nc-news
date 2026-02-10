@@ -1,27 +1,38 @@
 const db = require("../db/connection");
+const { sort } = require("../db/data/test-data/articles");
 
-exports.fetchAllArticles = (orderByColumn, sortBy) => {
-  return db
-    .query(
-      `
-    SELECT 
-        articles.author,
-        articles.title,
-        articles.article_id,
-        articles.topic,
-        articles.created_at,
-        articles.votes,
-        articles.article_img_url,
-    CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
-    FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY ${orderByColumn} ${sortBy};
-        `,
-    )
-    .then((articles) => {
-      return articles.rows;
-    });
+exports.fetchAllArticles = (orderByColumn, sortBy, topicSearch) => {
+  let queryStr = `
+      SELECT
+         articles.author,
+         articles.title,
+         articles.article_id,
+         articles.topic,
+         articles.created_at,
+         articles.votes,
+         articles.article_img_url,
+     CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
+     FROM articles
+     LEFT JOIN comments ON articles.article_id = comments.article_id
+     `;
+  let groupAndSortStr = `
+     GROUP BY articles.article_id
+     ORDER BY `;
+
+  // let queryParams = [topicSearch, orderByColumn, sortBy];
+  let queryParams = [];
+
+  if (topicSearch !== "") {
+    queryStr += ` WHERE articles.topic = $1`;
+    queryParams.push(topicSearch);
+  }
+  groupAndSortStr += `${orderByColumn} ${sortBy}`;
+
+  // console.log((queryStr += groupAndSortStr));
+  // console.log(queryParams);
+  return db.query(queryStr + groupAndSortStr, queryParams).then((articles) => {
+    return articles.rows;
+  });
 };
 
 exports.fetchArticleById = (article_id) => {
