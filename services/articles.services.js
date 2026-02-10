@@ -21,16 +21,15 @@ exports.getAllArticles = async (query) => {
 
     // checks if query is topics query?
     if (key === "topic") {
-      fetchTopicsBySlug(value).then((topics) => {
-        if (topics.length === 0) {
-          throw new NotFoundError(
-            "Topic not found",
-            "Location: articles.service.js",
-          );
-        } else {
-          topicSearch = value;
-        }
-      });
+      const topics = fetchTopicsBySlug(value);
+      if (topics.length === 0) {
+        throw new NotFoundError(
+          "Topic not found",
+          "Location: articles.service.js",
+        );
+      } else {
+        topicSearch = value;
+      }
     }
 
     // Sort by functionality
@@ -76,7 +75,7 @@ exports.getAllArticles = async (query) => {
   return fetchAllArticles(orderByColumn, sortBy, topicSearch);
 };
 
-exports.getArticleById = (article_id) => {
+exports.getArticleById = async (article_id) => {
   if (isNaN(Number(article_id))) {
     throw new InvalidInputError(
       "Please provide valid article_id",
@@ -84,16 +83,15 @@ exports.getArticleById = (article_id) => {
     );
   }
 
-  return fetchArticleById(article_id).then((article) => {
-    if (article.length === 0) {
-      throw new NotFoundError(
-        "This article id does not exist",
-        "Location: articles.services.js",
-      );
-    } else {
-      return article;
-    }
-  });
+  const article = fetchArticleById(article_id);
+  if (article.length === 0) {
+    throw new NotFoundError(
+      "This article id does not exist",
+      "Location: articles.services.js",
+    );
+  } else {
+    return article;
+  }
 };
 
 exports.patchVoteByArticleId = async (article_id, inc_votes) => {

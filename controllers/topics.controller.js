@@ -5,14 +5,21 @@ const {
   getTopicBySlug: getTopicBySlugService,
 } = require("../services/topics.service");
 
-exports.getAllTopics = (request, response, next) => {
-  getAllTopicsService()
-    .then((topics) => {
-      response.status(200).send({ topics });
-    })
-    .catch((error) => {
-      next(error);
-    });
+exports.getAllTopics = async (request, response, next) => {
+  // getAllTopicsService()
+  //   .then((topics) => {
+  //     response.status(200).send({ topics });
+  //   })
+  //   .catch((error) => {
+  //     next(error);
+  //   });
+
+  try {
+    const topics = await getAllTopicsService();
+    response.status(200).send({ topics });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getTopicBySlug = (request, response, next) => {

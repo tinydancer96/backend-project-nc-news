@@ -5,33 +5,37 @@ const {
   patchVoteByArticleId: patchVoteByArticleIdService,
 } = require("../services/articles.services");
 
-exports.getAllArticles = (request, response, next) => {
+exports.getAllArticles = async (request, response, next) => {
   const query = request.query;
-  getAllArticlesService(query)
-    .then((articles) => {
-      response.status(200).send({ articles });
-    })
-    .catch((error) => {
-      next(error);
-    });
+  try {
+    const articles = await getAllArticlesService(query);
+    response.status(200).send({ articles });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.getArticleById = (request, response, next) => {
+exports.getArticleById = async (request, response, next) => {
   const { article_id } = request.params;
-  getArticleByIdService(article_id)
-    .then((article) => {
-      response.status(200).send({ article });
-    })
-    .catch((error) => {
-      next(error);
-    });
+  try {
+    const article = await getArticleByIdService(article_id);
+    response.status(200).send({ article });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.patchVoteByArticleId = (req, res, next) => {
+exports.patchVoteByArticleId = async (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
 
-  patchVoteByArticleIdService(article_id, inc_votes)
-    .then((updatedArticle) => res.status(200).send({ article: updatedArticle }))
-    .catch(next);
+  try {
+    const updatedArticle = await patchVoteByArticleIdService(
+      article_id,
+      inc_votes,
+    );
+    res.status(200).send({ article: updatedArticle });
+  } catch (error) {
+    next(error);
+  }
 };

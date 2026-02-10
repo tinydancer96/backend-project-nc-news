@@ -1,51 +1,44 @@
 const db = require("../db/connection");
 
-exports.fetchCommentById = (comment_id) => {
-  return db
-    .query(
-      `
-    SELECT * FROM comments
-    WHERE comment_id = $1;
-    `,
-      [comment_id],
-    )
-    .then((comment) => {
-      return comment.rows;
-    });
+exports.fetchCommentById = async (comment_id) => {
+  const query = await db.query(
+    `
+      SELECT * FROM comments
+      WHERE comment_id = $1;
+      `,
+    [comment_id],
+  );
+
+  return query.rows;
 };
 
-exports.fetchCommentsByArticleId = (article_id) => {
-  return db
-    .query(
-      `
+exports.fetchCommentsByArticleId = async (article_id) => {
+  const query = await db.query(
+    `
         SELECT * FROM comments
         WHERE article_id = $1
         ORDER BY created_at DESC
       `,
-      [article_id],
-    )
-    .then((article) => {
-      return article.rows;
-    });
+    [article_id],
+  );
+
+  return query.rows;
 };
 
-exports.fetchCommentsByArticleIdPost = (article_id, author, body) => {
-  return db
-    .query(
-      `
+exports.fetchCommentsByArticleIdPost = async (article_id, author, body) => {
+  const query = await db.query(
+    `
         INSERT INTO comments (article_id, body, author)
         VALUES ($1, $2, $3)
         RETURNING *;
       `,
-      [article_id, body, author],
-    )
-    .then((comments) => {
-      return comments.rows[0];
-    });
+    [article_id, body, author],
+  );
+  return query.rows[0];
 };
 
-exports.fetchCommentsByArticleIdDelete = (comment_id) => {
-  return db.query(
+exports.fetchCommentsByArticleIdDelete = async (comment_id) => {
+  const query = await db.query(
     `
     DELETE FROM comments
     WHERE comment_id = $1;

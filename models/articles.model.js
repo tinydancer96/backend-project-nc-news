@@ -1,7 +1,7 @@
 const db = require("../db/connection");
 const { sort } = require("../db/data/test-data/articles");
 
-exports.fetchAllArticles = (orderByColumn, sortBy, topicSearch) => {
+exports.fetchAllArticles = async (orderByColumn, sortBy, topicSearch) => {
   let queryStr = `
       SELECT
          articles.author,
@@ -28,36 +28,30 @@ exports.fetchAllArticles = (orderByColumn, sortBy, topicSearch) => {
   }
   groupAndSortStr += `${orderByColumn} ${sortBy}`;
 
-  // console.log((queryStr += groupAndSortStr));
-  // console.log(queryParams);
-  return db.query(queryStr + groupAndSortStr, queryParams).then((articles) => {
-    return articles.rows;
-  });
+  const query = await db.query(queryStr + groupAndSortStr, queryParams);
+  return query.rows;
 };
 
-exports.fetchArticleById = (article_id) => {
-  return db
-    .query(
-      `
-     SELECT 
-        articles.author,
-        articles.title,
-        articles.article_id,
-        articles.topic,
-        articles.created_at,
-        articles.votes,
-        articles.article_img_url,
-    CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
-    FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    WHERE articles.article_id = $1
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`,
-      [article_id],
-    )
-    .then((article) => {
-      return article.rows;
-    });
+exports.fetchArticleById = async (article_id) => {
+  const query = await db.query(
+    `
+      SELECT 
+          articles.author,
+          articles.title,
+          articles.article_id,
+          articles.topic,
+          articles.created_at,
+          articles.votes,
+          articles.article_img_url,
+      CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
+      FROM articles
+      LEFT JOIN comments ON articles.article_id = comments.article_id
+      WHERE articles.article_id = $1
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC;`,
+    [article_id],
+  );
+  return query.rows;
 };
 
 exports.updateArticleVotesById = (article_id, inc_votes) => {

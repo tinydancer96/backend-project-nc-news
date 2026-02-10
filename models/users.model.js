@@ -1,15 +1,13 @@
 const db = require("../db/connection");
 
-exports.fetchAllUsers = () => {
-  return db.query(`SELECT * FROM users`).then((users) => {
-    return users.rows;
-  });
+exports.fetchAllUsers = async () => {
+  const query = await db.query(`SELECT * FROM users`);
+  return query.rows;
 };
 
-exports.fetchUserById = (username) => {
-  return db
-    .query(`SELECT * FROM users WHERE username = $1`, [username])
-    .then((user) => {
-      return user.rows;
-    });
+exports.fetchUserById = async (username) => {
+  const query = await db.query(`SELECT * FROM users WHERE username = $1`, [
+    username,
+  ]);
+  return query.rows;
 };

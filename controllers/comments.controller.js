@@ -6,29 +6,28 @@ const {
 } = require("../services/comments.service");
 const InvalidInputError = require("../myErrorTypes/invalidInput");
 
-exports.getCommentsByCommentId = (request, response, next) => {
+exports.getCommentsByCommentId = async (request, response, next) => {
   const { comment_id } = request.params;
-  getCommentsByCommentIdService(comment_id)
-    .then((comment) => {
-      response.status(200).send({ comment });
-    })
-    .catch((error) => {
-      next(error);
-    });
+
+  try {
+    const comment = await getCommentsByCommentIdService(comment_id);
+    response.status(200).send({ comment });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.getCommentsByArticleId = (request, response, next) => {
+exports.getCommentsByArticleId = async (request, response, next) => {
   const { article_id } = request.params;
-  getCommentsByArticleIdService(article_id)
-    .then((comments) => {
-      response.status(200).send({ comments });
-    })
-    .catch((error) => {
-      next(error);
-    });
+  try {
+    const comments = await getCommentsByArticleIdService(article_id);
+    response.status(200).send({ comments });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.postCommentbyArticleId = (request, response, next) => {
+exports.postCommentbyArticleId = async (request, response, next) => {
   const { article_id } = request.params;
   const { author, body } = request.body;
 
@@ -40,20 +39,24 @@ exports.postCommentbyArticleId = (request, response, next) => {
     return new InvalidInputError("Missing author");
   }
 
-  postCommentbyArticleIdService(article_id, author, body)
-    .then((comment) => {
-      response.status(201).send({ comment });
-    })
-    .catch(next);
+  try {
+    const comment = await postCommentbyArticleIdService(
+      article_id,
+      author,
+      body,
+    );
+    response.status(201).send({ comment });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.deleteCommentByArticleId = (request, response, next) => {
+exports.deleteCommentByArticleId = async (request, response, next) => {
   const { comment_id } = request.params;
-  deleteCommentByArticleIdService(comment_id)
-    .then((comment) => {
-      response.status(204).send();
-    })
-    .catch((error) => {
-      next(error);
-    });
+  try {
+    const deleteComment = await deleteCommentByArticleIdService(comment_id);
+    response.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 };

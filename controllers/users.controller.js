@@ -3,16 +3,23 @@ const {
   userbyId: userbyIdService,
 } = require("../services/users.service");
 
-const getAllUsers = (request, response) => {
-  getAllUsersService().then((users) => {
+const getAllUsers = async (request, response) => {
+  try {
+    const users = await getAllUsersService();
     response.status(200).send({ users });
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const userbyId = (request, response) => {
+const userbyId = async (request, response) => {
   const { username } = request.params;
-  userbyIdService(username).then((user) => {
+  try {
+    const user = await userbyIdService(username);
     response.status(200).send({ user });
-  });
+  } catch (error) {
+    next(error);
+  }
 };
+
 module.exports = { getAllUsers, userbyId };
