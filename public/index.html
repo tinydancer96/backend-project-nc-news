@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>NC News API</title>
+  </head>
+  <header>
+    <h1>NC News API</h1>
+  </header>
+
+  <main>
+    <h2>Available end points</h2>
+
+    <h3>GET /api/articles</h3>
+    <p>Retrieves all articles</p>
+
+    <h4>Example response</h4>
+    <pre>
+        <code>
+            {
+                "articles": [
+                    {
+                        "author":"grumpy19",
+                        "title":"The Notorious MSG’s Unlikely Formula For Success",
+                        "article_id":34,"topic":"cooking",
+                        "created_at":"2020-11-22T11:13:00.000Z",
+                        "votes":0,"article_img_url":"https://images.pexels.com/photos/2403392/pexels-photo-2403392.jpeg?w=700&h=700",
+                        "comment_count":11
+                    },
+                    {
+                        "author":"tickle122",
+                        "title":"The battle for Node.js security has only begun",
+                        "article_id":12,
+                        "topic":"coding",
+                        "created_at":"2020-11-15T13:25:00.000Z",
+                        "votes":0,
+                        "article_img_url":"https://images.pexels.com/photos/10845119/pexels-photo-10845119.jpeg?w=700&h=700",
+                        "comment_count":7
+                    }
+                ]
+            } 
+        </code>
+    </pre>
+
+    <h3>GET /api/articles/:article_id</h3>
+    <p>Retrieves a single article with article_id</p>
+
+    <h4>Example Code</h4>
+    <pre>
+            <code>
+                {
+                    "article": [
+                        {
+                            "author":"grumpy19",
+                            "title":"The Notorious MSG’s Unlikely Formula For Success",
+                            "article_id":34,"topic":"cooking",
+                            "created_at":"2020-11-22T11:13:00.000Z",
+                            "votes":0,"article_img_url":"https://images.pexels.com/photos/2403392/pexels-photo-2403392.jpeg?w=700&h=700",
+                            "comment_count":11
+                        }
+                    ]
+                } 
+            </code>
+        </pre>
+
+    <h3>GET /api/articles/:article_id/comments</h3>
+    <p>Retrieve all comments for a specific article</p>
+    <h4>Example code</h4>
+    <pre>
+            <code>
+                {
+                    "comments": [
+                        {
+                            "comment_id": 74,
+                            "article_id": 6,
+                            "body": "Eius dolor qui ut eligendi. Vero et animi consequatur placeat repudiandae ex dolores qui magni. Omnis magnam rerum molestiae. Nihil rerum ipsa error quibusdam. Qui temporibus quia quia. Natus necessitatibus numquam deserunt quisquam distinctio soluta consequatur.",
+                            "votes": 3,
+                            "author": "cooljmessy",
+                            "created_at": "2020-11-04T21:21:00.000Z"
+                        },
+                        {
+                            "comment_id": 224,
+                            "article_id": 6,
+                            "body": "Adipisci ut dignissimos doloribus iure quis vel aut. Neque voluptatem occaecati qui autem officiis. Aperiam incidunt qui assumenda reprehenderit maxime repudiandae voluptas deleniti.",
+                            "votes": 18,
+                            "author": "jessjelly",
+                            "created_at": "2020-11-01T04:25:00.000Z"
+                        },
+                        {
+                            "comment_id": 65,
+                            "article_id": 6,
+                            "body": "Officia nihil harum saepe occaecati dolores inventore. Eos cum illo aut blanditiis eum.",
+                            "votes": 4,
+                            "author": "weegembump",
+                            "created_at": "2020-10-19T00:05:00.000Z"
+                        }
+                    ]
+                }
+            </code>
+        </pre>
+
+    <h3>POST /api/articles/:article_id/comment</h3>
+    <p>Makes a new comment for an article</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            { "username": "tinydancer96", "body": "Hi there, new comment for article 2" }
+        </code>
+    </pre>
+
+    <h3>PATCH /api/articles/:article_id</h3>
+    <p>Increments or decrements votes for an article</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            { "inc_votes": 1 } 
+        </code>
+    </pre>
+
+    <h3>GET api/comments/:comment_id</h3>
+    <p>Retrieves a single comment</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+                "comment": [
+                                {
+                                    "comment_id": 4,
+                                    "article_id": 18,
+                                    "body": "Rerum voluptatem quam odio facilis quis illo unde. Ex blanditiis optio tenetur sunt. Cumque dolor ducimus et qui officia quasi non illum reiciendis.",
+                                    "votes": 4,
+                                    "author": "happyamy2016",
+                                    "created_at": "2020-10-10T22:03:00.000Z"
+                                }
+                            ]
+            }
+        </code>
+    </pre>
+
+    <h3>DELETE /api/comments/:comment_id</h3>
+    <p>
+      Deletes a comment. Send a delete request via the url and the comment will
+      be deleted
+    </p>
+
+    <h3>GET /api/topics</h3>
+    <p>Will retrieve all topics</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+                "topics": [
+                    {
+                        "slug": "coding",
+                        "description": "Code is love, code is life",
+                        "img_url": ""
+                    },
+                    {
+                        "slug": "football",
+                        "description": "FOOTIE!",
+                        "img_url": "https://images.pexels.com/photos/209841/pexels-photo-209841.jpeg?w=700&h=700"
+                    },
+                    {
+                        "slug": "cooking",
+                        "description": "Hey good looking, what you got cooking?",
+                        "img_url": "https://images.pexels.com/photos/33242/cooking-ingredient-cuisine-kitchen.jpg?w=700&h=700"
+                    }
+                ]
+            }
+        </code>
+    </pre>
+
+    <h3>GET /api/topics/:slug</h3>
+    <p>Retrieves topics by their slug</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+                "topic": [
+                    {
+                        "slug": "football",
+                        "description": "FOOTIE!",
+                        "img_url": "https://images.pexels.com/photos/209841/pexels-photo-209841.jpeg?w=700&h=700"
+                    }
+                ]
+            }
+        </code>
+    </pre>
+
+    <h3>GET /api/users</h3>
+    <p>Retrieves all users</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+	"users": [
+                {
+                    "username": "tickle122",
+                    "name": "Tom Tickle",
+                    "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+                },
+                {
+                    "username": "grumpy19",
+                    "name": "Paul Grump",
+                    "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/78/Mr-Grumpy-3A.PNG/revision/latest?cb=20170707233013"
+                },
+                {
+                    "username": "happyamy2016",
+                    "name": "Amy Happy",
+                    "avatar_url": "https://vignette1.wikia.nocookie.net/mrmen/images/7/7f/Mr_Happy.jpg/revision/latest?cb=20140102171729"
+                },
+            ]
+        }
+        </code>
+    </pre>
+
+    <h3>GET /api/users/:username</h3>
+    <p>Retreives a single user</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+                "user": [
+                    {
+                        "username": "tickle122",
+                        "name": "Tom Tickle",
+                        "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+                    }
+                ]
+            }
+        </code>
+    </pre>
+
+    <h2>Queries</h2>
+
+    <h3>GET api/articles?topic=:slug</h3>
+    <p>Retrieves all articles related to the queried topic</p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+	            "articles": [
+                                {
+                                    "author": "tickle122",
+                                    "title": "Agility Training Drills For Football Players",
+                                    "article_id": 21,
+                                    "topic": "football",
+                                    "created_at": "2020-10-26T10:05:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/3448250/pexels-photo-3448250.jpeg?w=700&h=700",
+                                    "comment_count": 8
+                                },
+                                {
+                                    "author": "jessjelly",
+                                    "title": "Who are the most followed clubs and players on Instagram?",
+                                    "article_id": 19,
+                                    "topic": "football",
+                                    "created_at": "2020-09-13T12:02:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/685382/pexels-photo-685382.jpeg?w=700&h=700",
+                                    "comment_count": 13
+                                },
+                                {
+                                    "author": "grumpy19",
+                                    "title": "The People Tracking Every Touch, Pass And Tackle in the World Cup",
+                                    "article_id": 18,
+                                    "topic": "football",
+                                    "created_at": "2020-08-17T14:03:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/1884576/pexels-photo-1884576.jpeg?w=700&h=700",
+                                    "comment_count": 8
+                                },
+                                {
+                                    "author": "weegembump",
+                                    "title": "History of FC Barcelona",
+                                    "article_id": 16,
+                                    "topic": "football",
+                                    "created_at": "2020-08-02T23:14:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/102448/pexels-photo-102448.jpeg?w=700&h=700",
+                                    "comment_count": 16
+                                },
+                                {
+                                    "author": "jessjelly",
+                                    "title": "Game of talents: management lessons from top football coaches",
+                                    "article_id": 24,
+                                    "topic": "football",
+                                    "created_at": "2020-07-09T22:14:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/168872/pexels-photo-168872.jpeg?w=700&h=700",
+                                    "comment_count": 5
+                                }
+                            ]
+            }
+        </code>
+    </pre>
+
+    <h3>GET /api/articles?author=asc/dec</h3>
+    <p>
+      Sort articles by author. User can choose either ascending or descening by
+      author
+    </p>
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+                "articles": [
+                                {
+                                    "author": "cooljmessy",
+                                    "title": "An Introduction to JavaScript Object Notation (JSON) in JavaScript and .NET",
+                                    "article_id": 10,
+                                    "topic": "coding",
+                                    "created_at": "2020-07-02T11:23:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/11035481/pexels-photo-11035481.jpeg?w=700&h=700",
+                                    "comment_count": 8
+                                },
+                                {
+                                    "author": "grumpy19",
+                                    "title": "Thanksgiving Drinks for Everyone",
+                                    "article_id": 27,
+                                    "topic": "cooking",
+                                    "created_at": "2020-01-24T23:22:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/1565982/pexels-photo-1565982.jpeg?w=700&h=700",
+                                    "comment_count": 13
+                                },
+                                {
+                                    "author": "happyamy2016",
+                                    "title": "Who Will Manage Your Club in 2021?",
+                                    "article_id": 14,
+                                    "topic": "football",
+                                    "created_at": "2020-06-24T14:14:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/209841/pexels-photo-209841.jpeg?w=700&h=700",
+                                    "comment_count": 3
+                                },
+                                {
+                                    "author": "jessjelly",
+                                    "title": "Please stop worrying about Angular 3",
+                                    "article_id": 5,
+                                    "topic": "coding",
+                                    "created_at": "2020-04-21T16:06:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/14011035/pexels-photo-14011035.jpeg?w=700&h=700",
+                                    "comment_count": 6
+                                }
+                            ]
+            }
+        </code>
+    </pre>
+
+    <h3>GET /api/articles?:title=asc/dec</h3>
+    <p>
+      Sort articles by title. User can choose either ascending or descening by
+      title
+    </p>
+
+    <h4>Example code</h4>
+    <pre>
+        <code>
+            {
+	            "articles": [
+		                        {
+                                    "author": "happyamy2016",
+                                    "title": "22 Amazing open source React projects",
+                                    "article_id": 3,
+                                    "topic": "coding",
+                                    "created_at": "2020-02-29T11:12:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?w=700&h=700",
+                                    "comment_count": 9
+                                },
+                                {
+                                    "author": "tickle122",
+                                    "title": "A BRIEF HISTORY OF FOOD—NO BIG DEAL",
+                                    "article_id": 29,
+                                    "topic": "cooking",
+                                    "created_at": "2020-01-06T20:12:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/357743/pexels-photo-357743.jpeg?w=700&h=700",
+                                    "comment_count": 10
+                                },
+                                {
+                                    "author": "tickle122",
+                                    "title": "Agility Training Drills For Football Players",
+                                    "article_id": 21,
+                                    "topic": "football",
+                                    "created_at": "2020-10-26T10:05:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/3448250/pexels-photo-3448250.jpeg?w=700&h=700",
+                                    "comment_count": 8
+                                },
+                                {
+                                    "author": "cooljmessy",
+                                    "title": "An Introduction to JavaScript Object Notation (JSON) in JavaScript and .NET",
+                                    "article_id": 10,
+                                    "topic": "coding",
+                                    "created_at": "2020-07-02T11:23:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/11035481/pexels-photo-11035481.jpeg?w=700&h=700",
+                                    "comment_count": 8
+                                },
+                                {
+                                    "author": "tickle122",
+                                    "title": "Defensive Metrics: Measuring the Intensity of a High Press",
+                                    "article_id": 22,
+                                    "topic": "football",
+                                    "created_at": "2020-04-17T12:10:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/906073/pexels-photo-906073.jpeg?w=700&h=700",
+                                    "comment_count": 8
+                                },
+                                {
+                                    "author": "tickle122",
+                                    "title": "Designing Better JavaScript APIs",
+                                    "article_id": 11,
+                                    "topic": "coding",
+                                    "created_at": "2020-07-06T23:13:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/5483071/pexels-photo-5483071.jpeg?w=700&h=700",
+                                    "comment_count": 5
+                                },
+                                {
+                                    "author": "cooljmessy",
+                                    "title": "Express.js: A Server-Side JavaScript Framework",
+                                    "article_id": 8,
+                                    "topic": "coding",
+                                    "created_at": "2020-10-05T22:23:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/11035482/pexels-photo-11035482.jpeg?w=700&h=700",
+                                    "comment_count": 7
+                                },
+                                {
+                                    "author": "jessjelly",
+                                    "title": "Game of talents: management lessons from top football coaches",
+                                    "article_id": 24,
+                                    "topic": "football",
+                                    "created_at": "2020-07-09T22:14:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/168872/pexels-photo-168872.jpeg?w=700&h=700",
+                                    "comment_count": 5
+                                },
+                                {
+                                    "author": "grumpy19",
+                                    "title": "Halal food: Keeping pure and true",
+                                    "article_id": 32,
+                                    "topic": "cooking",
+                                    "created_at": "2020-06-18T20:08:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/954677/pexels-photo-954677.jpeg?w=700&h=700",
+                                    "comment_count": 5
+                                },
+                                {
+                                    "author": "happyamy2016",
+                                    "title": "High Altitude Cooking",
+                                    "article_id": 28,
+                                    "topic": "cooking",
+                                    "created_at": "2020-01-04T00:24:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/691114/pexels-photo-691114.jpeg?w=700&h=700",
+                                    "comment_count": 5
+                                },
+                                {
+                                    "author": "weegembump",
+                                    "title": "History of FC Barcelona",
+                                    "article_id": 16,
+                                    "topic": "football",
+                                    "created_at": "2020-08-02T23:14:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/102448/pexels-photo-102448.jpeg?w=700&h=700",
+                                    "comment_count": 16
+                                },
+                                {
+                                    "author": "tickle122",
+                                    "title": "History of Football",
+                                    "article_id": 20,
+                                    "topic": "football",
+                                    "created_at": "2020-03-10T21:05:00.000Z",
+                                    "votes": 0,
+                                    "article_img_url": "https://images.pexels.com/photos/3621104/pexels-photo-3621104.jpeg?w=700&h=700",
+                                    "comment_count": 5
+                                },
+                            ]
+            }
+        </code>
+    </pre>
+  </main>
+  <body></body>
+</html>

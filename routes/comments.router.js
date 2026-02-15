@@ -6,7 +6,9 @@ const {
   getCommentsByCommentId,
 } = require("../controllers/comments.controller");
 
-router.get("/:comment_id", getCommentsByCommentId);
-router.delete("/:comment_id", deleteCommentByArticleId);
+router
+  .route("/:comment_id")
+  .get(getCommentsByCommentId)
+  .delete(deleteCommentByArticleId);
 
 module.exports = { router };

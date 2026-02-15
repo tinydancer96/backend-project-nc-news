@@ -11,6 +11,13 @@ const InvalidInputError = require("../myErrorTypes/invalidInput");
 const NotFoundError = require("../myErrorTypes/notFound");
 
 exports.getCommentsByCommentId = async (comment_id) => {
+  const comment = await fetchCommentById(comment_id);
+  if (comment.length === 0) {
+    throw new NotFoundError(
+      "Comment does not exist",
+      "Location: comments.service.js",
+    );
+  }
   return fetchCommentById(comment_id);
 };
 

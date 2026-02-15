@@ -15,9 +15,12 @@ const {
 } = require("../controllers/comments.controller");
 
 router.get("/", getAllArticles);
-router.get("/:article_id", getArticleById);
-router.get("/:article_id/comments", getCommentsByArticleId);
-router.post("/:article_id/comments", postCommentbyArticleId);
-router.patch("/:article_id", patchVoteByArticleId);
+
+router.route("/:article_id").get(getArticleById).patch(patchVoteByArticleId);
+
+router
+  .route("/:article_id/comments")
+  .get(getCommentsByArticleId)
+  .post(postCommentbyArticleId);
 
 module.exports = { router };
