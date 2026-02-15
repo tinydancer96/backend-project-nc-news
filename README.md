@@ -2,6 +2,16 @@
 
 This project aims to emulate a discussion platform such as reddit. The tables consist of users, articles, topics and comments. Please refer to the end-points documentation for a thorough list of end-points you can visit.
 
+This project covers the following topics:
+
+1. Querying a database.
+2. Using a TDD approach to cover both the happy and error paths.
+3. Setting a RESTful API with a number of endpoints which cover CRUD operations.
+4. Setting up parametric endpoints.
+5. Handling queries.
+6. Manipulating data to respond to client requirements.
+7. Hosting your server and DB.
+
 Please visist https://nc-news-zi98.onrender.com/ for the deployed version of this website.
 Please visit https://github.com/tinydancer96/backend-project-nc-news to view the code for this project.
 
