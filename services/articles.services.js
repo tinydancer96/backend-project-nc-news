@@ -2,9 +2,12 @@ const {
   fetchAllArticles,
   fetchArticleById,
   updateArticleVotesById,
+  fetchArticlePost,
 } = require("../models/articles.model");
 
 const { fetchTopicsBySlug } = require("../models/topics.model");
+
+const { fetchUserById } = require("../models/users.model");
 
 const NotFoundError = require("../myErrorTypes/notFound");
 const InvalidInputError = require("../myErrorTypes/invalidInput");
@@ -117,4 +120,66 @@ exports.patchVoteByArticleId = async (article_id, inc_votes) => {
   }
 
   return updateArticleVotesById(article_id, inc_votes);
+};
+
+exports.postArticle = async (author, title, body, topic, article_img_url) => {
+  // does author exist in authors table
+  const authorExist = await fetchUserById(author);
+  if (author.length === 0) {
+    throw new InvalidInputError(
+      "Author is empty.",
+      "Location: articles service",
+    );
+  }
+
+  if (authorExist.length === 0) {
+    throw new NotFoundError(
+      "Author does not exist.",
+      "Location: articles service",
+    );
+  }
+
+  // is title empty
+
+  if (title.length === 0) {
+    throw new InvalidInputError(
+      "Title is empty. Please provide a title before publishing",
+      "Location: articles service",
+    );
+  }
+
+  // is body empty
+
+  if (body.length === 0) {
+    throw new InvalidInputError(
+      "Body is empty. Please provide a body before publishing",
+      "Location: articles service",
+    );
+  }
+
+  // is topic empty/exists
+
+  const topicExist = await fetchTopicsBySlug(topic);
+  if (topic.length === 0) {
+    throw new InvalidInputError(
+      "Topic is empty. Please provide a topic before publishing",
+      "Location: articles service",
+    );
+  }
+
+  if (topicExist.length === 0) {
+    throw new NotFoundError(
+      "Topic does not exist.",
+      "Location: articles service",
+    );
+  }
+
+  // is article_img_url empty
+
+  if (article_img_url.length === 0) {
+    article_img_url =
+      "https://unsplash.com/photos/three-crumpled-yellow-papers-on-green-surface-surrounded-by-yellow-lined-papers-V5vqWC9gyEU";
+  }
+
+  return fetchArticlePost(author, title, body, topic, article_img_url);
 };

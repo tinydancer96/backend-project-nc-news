@@ -275,3 +275,131 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("POST /api/articles", () => {
+  test("error if author is blank", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "",
+        title: "New article to publish",
+        topic: "mitch",
+        body: "This is a new article from butter_bridge!",
+        article_img_url: "",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Author is empty.");
+      });
+  });
+
+  test("error if author does not exist on user table", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "invalidUser",
+        title: "New article to publish",
+        topic: "mitch",
+        body: "This is a new article from butter_bridge!",
+        article_img_url: "",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Author does not exist.");
+      });
+  });
+
+  test("error if title is blank", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "",
+        topic: "mitch",
+        body: "This is a new article from butter_bridge!",
+        article_img_url: "",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Title is empty. Please provide a title before publishing",
+        );
+      });
+  });
+
+  test("error if body is blank", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "New article from butter_bridge",
+        topic: "mitch",
+        body: "",
+        article_img_url: "",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Body is empty. Please provide a body before publishing",
+        );
+      });
+  });
+
+  test("error if topic is blank", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "New article to publish",
+        topic: "",
+        body: "This is a new article from butter_bridge!",
+        article_img_url: "",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Topic is empty. Please provide a topic before publishing",
+        );
+      });
+  });
+
+  test("error if topic does not exist on topic table", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "New article to publish",
+        topic: "invalidTopic",
+        body: "This is a new article from butter_bridge!",
+        article_img_url: "",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic does not exist.");
+      });
+  });
+
+  test("retrieves article posted if valid", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "New article to publish",
+        topic: "mitch",
+        body: "This is a new article from butter_bridge!",
+        article_img_url: "",
+      })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(typeof article[0].author).toBe("string");
+        expect(typeof article[0].title).toBe("string");
+        expect(typeof article[0].topic).toBe("string");
+        expect(typeof article[0].body).toBe("string");
+        expect(typeof article[0].article_img_url).toBe("string");
+        expect(typeof article[0].created_at).toBe("string");
+        expect(typeof article[0].votes).toBe("number");
+        expect(typeof article[0].comment_count).toBe("number");
+      });
+  });
+});

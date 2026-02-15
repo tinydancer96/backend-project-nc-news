@@ -2,7 +2,7 @@
 
 This project aims to emulate a discussion platform such as reddit. The tables consist of users, articles, topics and comments. Please refer to the end-points documentation for a thorough list of end-points you can visit.
 
-This project covers the following topics:
+This project covers the following learning objectives:
 
 1. Querying a database.
 2. Using a TDD approach to cover both the happy and error paths.
