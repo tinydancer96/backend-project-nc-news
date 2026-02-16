@@ -19,9 +19,15 @@ exports.getCommentsByCommentId = async (request, response, next) => {
 
 exports.getCommentsByArticleId = async (request, response, next) => {
   const { article_id } = request.params;
+  const query = request.query;
   try {
-    const comments = await getCommentsByArticleIdService(article_id);
-    response.status(200).send({ comments });
+    const comments = await getCommentsByArticleIdService(article_id, query);
+    response.status(200).send({
+      comments: comments.paginatedResults,
+      articleCount: comments.articleCount,
+      currentPage: comments.currentPage,
+      pageCount: comments.pageCount,
+    });
   } catch (error) {
     next(error);
   }

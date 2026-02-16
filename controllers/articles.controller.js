@@ -10,7 +10,11 @@ exports.getAllArticles = async (request, response, next) => {
   const query = request.query;
   try {
     const articles = await getAllArticlesService(query);
-    response.status(200).send({ articles });
+    response.status(200).send({
+      articles: articles.articles,
+      total_count: articles.paginationInformation.articleCount,
+      currentPage: `page ${articles.paginationInformation.currentPage} of ${articles.paginationInformation.pageCount}`,
+    });
   } catch (error) {
     next(error);
   }

@@ -7,6 +7,8 @@ const {
 
 const { fetchTopicsBySlug } = require("../models/topics.model");
 
+const { pagination } = require("../utils/pagination");
+
 const { fetchUserById } = require("../models/users.model");
 
 const NotFoundError = require("../myErrorTypes/notFound");
@@ -17,7 +19,7 @@ exports.getAllArticles = async (query) => {
   let orderByColumn = "articles.created_at";
   let sortBy = "desc";
   let topicSearch = "";
-  let limit = 2;
+  let limit = 10;
   let startingPage = 1;
 
   if (Object.keys(query).length !== 0) {
@@ -65,35 +67,12 @@ exports.getAllArticles = async (query) => {
   );
 
   // pagination logic
+  const paginated = pagination(query, limit, startingPage, fetchedResults);
 
-  if (query.limit !== undefined) {
-    if (typeof Number(query.limit) !== "number" || isNaN(Number(query.limit))) {
-      throw new InvalidInputError(
-        "Please provide a valid limit number",
-        "Location: articles service",
-      );
-    } else {
-      limit = query.limit;
-    }
-  }
-
-  if (query.p !== undefined) {
-    if (typeof Number(query.p) !== "number" || isNaN(Number(query.p))) {
-      throw new InvalidInputError(
-        "Please provide a valid page number",
-        "Location: articles service",
-      );
-    } else {
-      startingPage = query.p;
-    }
-  }
-  let paginatedResults = [];
-
-  for (let i = limit * startingPage - limit; i < limit * startingPage; i++) {
-    paginatedResults.push(fetchedResults[i]);
-  }
-
-  return paginatedResults;
+  return {
+    articles: paginated.paginatedResults,
+    paginationInformation: paginated,
+  };
 };
 
 exports.getArticleById = async (article_id) => {

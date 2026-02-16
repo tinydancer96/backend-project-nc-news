@@ -10,6 +10,8 @@ const { fetchArticleById } = require("../models/articles.model");
 const InvalidInputError = require("../myErrorTypes/invalidInput");
 const NotFoundError = require("../myErrorTypes/notFound");
 
+const { pagination } = require("../utils/pagination");
+
 exports.getCommentsByCommentId = async (comment_id) => {
   const comment = await fetchCommentById(comment_id);
   if (comment.length === 0) {
@@ -21,7 +23,9 @@ exports.getCommentsByCommentId = async (comment_id) => {
   return fetchCommentById(comment_id);
 };
 
-exports.getCommentsByArticleId = async (article_id) => {
+exports.getCommentsByArticleId = async (article_id, query) => {
+  let limit = 10;
+  let startingPage = 1;
   if (isNaN(Number(article_id))) {
     throw new InvalidInputError(
       "Please provide a valid article_id",
@@ -37,12 +41,20 @@ exports.getCommentsByArticleId = async (article_id) => {
     );
   }
 
-  const comments = await fetchCommentsByArticleId(article_id);
-  if (comments.length === 0) {
+  const fetchedResults = await fetchCommentsByArticleId(article_id);
+  if (fetchedResults.length === 0) {
     return "There are no comments for this article";
-  } else {
-    return comments;
   }
+
+  const paginated = pagination(query, limit, startingPage, fetchedResults);
+  console.log(paginated.paginatedResults);
+  return {
+    comments: paginated.paginatedResults,
+    paginatedResults: paginated.paginatedResults,
+    articleCount: paginated.articleCount,
+    currentPage: paginated.currentPage,
+    pageCount: paginated.pageCount,
+  };
 };
 
 exports.postCommentbyArticleId = async (article_id, author, body) => {
