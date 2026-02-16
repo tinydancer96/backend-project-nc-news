@@ -26,7 +26,6 @@ exports.fetchAllArticles = async (orderByColumn, sortBy, topicSearch) => {
     queryParams.push(topicSearch);
   }
   groupAndSortStr += `${orderByColumn} ${sortBy}`;
-
   const query = await db.query(queryStr + groupAndSortStr, queryParams);
   return query.rows;
 };
