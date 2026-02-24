@@ -5,11 +5,9 @@ const { router: articlesRouter } = require("./routes/articles.router");
 const { router: usersRouter } = require("./routes/users.router");
 const { router: commentsRouter } = require("./routes/comments.router");
 const { router: getRootPath } = require("./routes/root.router");
-const cors = require("cors");
 
 const NotFoundError = require("./myErrorTypes/notFound");
 const InvalidInputError = require("./myErrorTypes/invalidInput");
-app.use(cors());
 app.use(express.json());
 
 app.use("/api/topics", topicsRouter);
