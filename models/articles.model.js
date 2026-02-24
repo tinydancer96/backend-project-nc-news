@@ -37,6 +37,7 @@ exports.fetchArticleById = async (article_id) => {
          articles.author,
          articles.title,
          articles.article_id,
+         articles.body,
          articles.topic,
          articles.created_at,
          articles.votes,
