@@ -33,20 +33,8 @@ exports.fetchAllArticles = async (orderByColumn, sortBy, topicSearch) => {
 exports.fetchArticleById = async (article_id) => {
   const query = await db.query(
     `
-      SELECT 
-          articles.author,
-          articles.title,
-          articles.article_id,
-          articles.topic,
-          articles.created_at,
-          articles.votes,
-          articles.article_img_url,
-      CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
-      FROM articles
-      LEFT JOIN comments ON articles.article_id = comments.article_id
-      WHERE articles.article_id = $1
-      GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;`,
+      SELECT articles.body FROM articles
+      WHERE articles.article_id = $1`,
     [article_id],
   );
   return query.rows;
