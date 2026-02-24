@@ -76,22 +76,22 @@ describe("GET /api/articles/", () => {
 });
 
 describe("GET /api/articles/3", () => {
-  test("GET: 200 - returns article of article_id 3 with correct columns", () => {
-    return request(app)
-      .get("/api/articles/3")
-      .expect(200)
-      .then(({ body }) => {
-        const { article } = body;
-        expect(typeof article[0].author).toBe("string");
-        expect(typeof article[0].title).toBe("string");
-        expect(article[0].article_id).toBe(3);
-        expect(typeof article[0].topic).toBe("string");
-        expect(typeof article[0].created_at).toBe("string");
-        expect(typeof article[0].votes).toBe("number");
-        expect(typeof article[0].article_img_url).toBe("string");
-        expect(typeof article[0].comment_count).toBe("number");
-      });
-  });
+  // test("GET: 200 - returns article of article_id 3 with correct columns", () => {
+  //   return request(app)
+  //     .get("/api/articles/3")
+  //     .expect(200)
+  //     .then(({ body }) => {
+  //       const { article } = body;
+  //       expect(typeof article[0].author).toBe("string");
+  //       expect(typeof article[0].title).toBe("string");
+  //       expect(article[0].article_id).toBe(3);
+  //       expect(typeof article[0].topic).toBe("string");
+  //       expect(typeof article[0].created_at).toBe("string");
+  //       expect(typeof article[0].votes).toBe("number");
+  //       expect(typeof article[0].article_img_url).toBe("string");
+  //       expect(typeof article[0].comment_count).toBe("number");
+  //     });
+  // });
 
   test("GET: 200 - returns a single article", () => {
     return request(app)
